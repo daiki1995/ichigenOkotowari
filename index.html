@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>常連シャドウイング</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Shippori+Mincho:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="title-panel">
+        <p class="eyebrow">Stealth & Timing Action</p>
+        <h1>常連シャドウイング</h1>
+        <p class="subtitle">狙え！一見さんお断り</p>
+        <div class="instructions">
+          <p>Z / 左半分長押し: 前進</p>
+          <p>X / 右半分長押し: ごまかし</p>
+          <p>常連に張り付き、振り返りだけをやり過ごせ。</p>
+        </div>
+      </section>
+
+      <section class="game-panel">
+        <header class="hud">
+          <div class="hud-block">
+            <span>ごまかしゲージ</span>
+            <div class="meter-frame">
+              <div id="staminaBar" class="meter-fill stamina"></div>
+            </div>
+          </div>
+          <div class="hud-block">
+            <span>店までの距離</span>
+            <div class="meter-frame">
+              <div id="distanceBar" class="meter-fill distance"></div>
+            </div>
+          </div>
+        </header>
+
+        <section class="stage-wrap">
+          <div class="moon"></div>
+          <div class="street-glow street-glow-a"></div>
+          <div class="street-glow street-glow-b"></div>
+
+          <div class="scene-backdrop">
+            <div class="skyline skyline-far"></div>
+            <div class="skyline skyline-near"></div>
+          </div>
+
+          <div id="stage" class="stage tailing-phase">
+            <div class="lane-marker"></div>
+            <div class="lane-marker lane-marker-2"></div>
+            <div id="shop" class="shop hidden">
+              <div class="noren">一見様お断り</div>
+            </div>
+
+            <div id="patron" class="character patron walking">
+              <div id="patronAlert" class="alert-mark hidden">?</div>
+              <div class="head"></div>
+              <div class="body"></div>
+              <div class="legs"></div>
+              <div class="label">常連</div>
+            </div>
+
+            <div id="player" class="character player idle">
+              <div class="head"></div>
+              <div class="body"></div>
+              <div class="legs"></div>
+              <div class="label">主人公</div>
+            </div>
+
+            <div id="suspicionFlash" class="suspicion-flash hidden">見られている</div>
+            <div id="dialogue" class="dialogue">常連の背後に自然に張り付け。</div>
+          </div>
+
+          <div id="cornerOverlay" class="corner-overlay hidden">
+            <p class="corner-stage" id="cornerStage">次の通り</p>
+            <h2 class="corner-title">角を曲がった</h2>
+            <p class="corner-text" id="cornerText">空気が変わる。少しだけ警戒が増す。</p>
+          </div>
+
+          <div id="bossOverlay" class="boss-overlay hidden">
+            <div class="boss-face">
+              <div class="boss-eyes"></div>
+              <div class="boss-mouth"></div>
+            </div>
+            <div class="timing-panel">
+              <p id="bossPrompt" class="boss-prompt">大将の視線に合わせて X を押せ</p>
+              <div class="timing-track">
+                <div class="timing-sweetspot"></div>
+                <div id="timingCursor" class="timing-cursor"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="status-bar">
+          <p id="phaseLabel">尾行フェーズ</p>
+          <p id="hintLabel">振り返り中はごまかしを維持</p>
+        </footer>
+
+        <div class="mobile-controls">
+          <button id="advanceButton" class="control-button advance">前進 A</button>
+          <button id="poseButton" class="control-button pose">ごまかす B</button>
+        </div>
+
+        <div id="overlay" class="overlay visible">
+          <div class="overlay-card">
+            <h2 id="overlayTitle">暖簾の向こうへ</h2>
+            <p id="overlayText">
+              常連の挙動を読み、店前でダッシュして最後にキメろ。
+            </p>
+            <button id="startButton" class="start-button">ゲーム開始</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./game.js"></script>
+  </body>
+</html>
