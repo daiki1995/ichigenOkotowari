@@ -21,7 +21,9 @@ const elements = {
   poseButton: document.getElementById("poseButton"),
   bossOverlay: document.getElementById("bossOverlay"),
   bossPrompt: document.getElementById("bossPrompt"),
-  timingCursor: document.getElementById("timingCursor")
+  timingCursor: document.getElementById("timingCursor"),
+  tailingBgm: document.getElementById("tailingBgm"),
+  entryBgm: document.getElementById("entryBgm")
 };
 
 const input = {
@@ -48,6 +50,7 @@ const state = {
   doubleLookStage: 0,
   stageLevel: 0,
   cornerTransitionTimer: 0,
+  bgmPhase: "none",
   lostSightTimer: 0,
   dashMeter: 0,
   dashTimer: 0,
@@ -99,6 +102,7 @@ function resetGame() {
   state.doubleLookStage = 0;
   state.stageLevel = 0;
   state.cornerTransitionTimer = 0;
+  state.bgmPhase = "none";
   state.lostSightTimer = 0;
   state.dashMeter = 0;
   state.dashTimer = 0;
@@ -116,8 +120,68 @@ function resetGame() {
   elements.bossOverlay.classList.add("hidden");
   elements.cornerOverlay.classList.add("hidden");
   setDialogue("常連の歩幅に合わせ、振り返りだけを潰せ。");
+  syncBgmTrack();
   updateHud();
   render();
+}
+
+function pauseBgm(audio) {
+  if (!audio) {
+    return;
+  }
+
+  audio.pause();
+  audio.currentTime = 0;
+}
+
+function playBgm(audio, volume = 0.6) {
+  if (!audio) {
+    return;
+  }
+
+  audio.volume = volume;
+  const playPromise = audio.play();
+  if (playPromise && typeof playPromise.catch === "function") {
+    playPromise.catch(() => {
+      // Ignore autoplay blocking. Playback will retry on next user interaction.
+    });
+  }
+}
+
+function getBgmPhaseKey() {
+  if (state.phase === "tailing") {
+    return "tailing";
+  }
+
+  if (state.phase === "dash" || state.phase === "pose") {
+    return "entry";
+  }
+
+  return "none";
+}
+
+function syncBgmTrack() {
+  const nextPhase = getBgmPhaseKey();
+  if (nextPhase === state.bgmPhase) {
+    return;
+  }
+
+  state.bgmPhase = nextPhase;
+
+  if (nextPhase === "tailing") {
+    pauseBgm(elements.entryBgm);
+    playBgm(elements.tailingBgm, 0.55);
+    return;
+  }
+
+  if (nextPhase === "entry") {
+    pauseBgm(elements.tailingBgm);
+    playBgm(elements.entryBgm, 0.62);
+    return;
+  }
+
+  pauseBgm(elements.tailingBgm);
+  pauseBgm(elements.entryBgm);
 }
 
 function setDialogue(text, seconds = 1.2) {
@@ -610,6 +674,8 @@ function update(timestamp) {
       elements.dialogue.textContent = getDefaultDialogue();
     }
   }
+
+  syncBgmTrack();
 
   updateHud();
   render();
